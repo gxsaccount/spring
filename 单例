@@ -1,0 +1,35 @@
+//------单例类---------------------
+ class Singleton
+{
+     //在同一个类内部，可以通过访问private,也就可以产生一个实例。(第三步) 
+     private  static Singleton  singleton = new Singleton(); //也必须是静态的
+
+     //构造方法必须私有，不然就可以new出来很多对象（第一步）
+     private Singleton()
+     {
+
+     }
+     //构造方法私有带来一个问题，就是不能产生实例了，所以通过写一个方法返回一个实例（第二步）
+     public static  Singleton  getInstance()   //必须为static  这样在main中才能直接通过类名访问(静态的不能访问非静态的)
+     {
+         return  singleton; //返回提前产生好的实例
+     }
+
+}
+class SingletonDemo5 {
+        private volatile static SingletonDemo5 SingletonDemo5;
+ 
+        private SingletonDemo5() {
+        }
+ 
+        public static SingletonDemo5 newInstance() {
+            if (SingletonDemo5 == null) {
+                synchronized (SingletonDemo5.class) {
+                    if (SingletonDemo5 == null) {
+                        SingletonDemo5 = new SingletonDemo5();
+                    }
+                }
+            }
+            return SingletonDemo5;
+        }
+    }
