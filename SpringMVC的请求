@@ -1,0 +1,5 @@
+1 请求带着用户请求内容离开浏览器，到达DispatherServlet
+2 DispatherServlet根据请求url找到对应Controller（处理器映射handler mapping），传递
+3 Controller完成逻辑处理，返回要处理的信息（Model）和View名字给DispatherServlet
+4 DispatherServlet将视图名解析为View（视图解析器 view resolver）
+5 DispatherServlet用model渲染view输出返回给客户端
