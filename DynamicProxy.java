@@ -1,42 +1,86 @@
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 
-public class DynamicProxy implements InvocationHandler {
+public class DynamicProxyAnnotation implements InvocationHandler {
 
-    private Object object;
+    private Object target;
 
-    public DynamicProxy(Object object) {
-        this.object = object;
+    public DynamicProxyAnnotation(Object target) {
+        this.target = target;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        System.out.println("实现业务之前需要做的事情");
-        method.invoke(object, args);
-        System.out.println("实现业务之后需要做的事情");
-        return null;
+        ProxyAnnotation annotation = (ProxyAnnotation) method.getDeclaredAnnotation(ProxyAnnotation.class);
+        Object result = null;
+        if(annotation==null){
+            result = method.invoke(target, args);
+        }
+        else if (annotation.value()) {
+            System.out.println("true的业务之前做的事情");
+            result = method.invoke(target, args);
+            System.out.println("true的业务之后做的事情");
+        } else if(!annotation.value()) {
+            System.out.println("false的业务之前做的事情");
+            result = method.invoke(target, args);
+            System.out.println("false的业务之后做的事情");
+        }
+        
+        return result;
     }
 
     public static void main(String[] args) {
         DoSomething doSomething = new RealDoSomething();
-        InvocationHandler handler = new DynamicProxy(doSomething);
-        DoSomething proxy = (DoSomething) Proxy.newProxyInstance(
-                handler.getClass().getClassLoader(), 
+        DynamicProxyAnnotation hander = new DynamicProxyAnnotation(doSomething);
+        DoSomething instance =(DoSomething)Proxy.newProxyInstance(
+                doSomething.getClass().getClassLoader(), 
                 doSomething.getClass().getInterfaces(), 
-                handler);
-        proxy.doSomething("do homework");
+                hander);
+        instance.doSomething("doSomething");
+        System.out.println("");
+        instance.doSomething2("doSomething2");
+        System.out.println("");
+        instance.doSomething3("doSomething3");
     }
+
 }
-interface DoSomething{
-    public default void  doSomething(String... things){
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface ProxyAnnotation {
+
+    public boolean value() default true;
+}
+
+interface DoSomething {
+
+    @ProxyAnnotation(true)
+    public default void doSomething(String... things) {
         for (String thing : things) {
             System.out.println(thing);
         }
-    }; 
+    }
+
+    @ProxyAnnotation(false)
+    public default void doSomething2(String... things) {
+        for (String thing : things) {
+            System.out.println(thing);
+        }
+    }
+    public default void doSomething3(String... things) {
+        for (String thing : things) {
+            System.out.println(thing);
+        }
+    }
+
 }
-class RealDoSomething implements DoSomething{
-    
+
+class RealDoSomething implements DoSomething {
+
 }
