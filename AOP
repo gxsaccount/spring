@@ -1,0 +1,37 @@
+aop：面向切面编程
+切面Aspect：通知+切点：它是什么，在何时，何处完成功能。  
+
+通知advice：
+  从连接点插入，添加新行为。定义切面的“何时”与“什么”
+  before:方法调用之前
+  after:方法完成之后
+  after-returning:方法成功执行后
+  after-throwing:方法抛出异常后
+  around:被通知的方法调用之前和调用之后
+连接点joinpoint：切面的插入点，spring只支持方法及别的连接点。对应before，after，after-returning，after-throwing，around
+切点poincut：
+  切点定义切面需要织入的一个或多个连接点。定义切面的“何处”
+引入：向现有的类添加新属性或方法
+织入：把切面应用到目标对象并创建新的代理对象的过程。
+  织入时机：
+    编译期：切面在目标类编译时织入。如AspectJ通过“织入编译器”织入切面。
+    类加载器：切面在类加载时织入。如AspectJ5的加载织入，用“织入类加载器”织入
+    运行期：在应用运行时织入。即“动态代理”。SpringAOP的织入方法。
+
+spring对AOP的支持(动态代理)
+基于代理的经典AOP（ProxyFactory Bean）
+纯POJO切面（XML）
+@AspectJ注解驱动切面（注解）
+注入式AspectJ切面
+
+@Aspect：指明此类应用AOP技术，可以添加如下注解进行织入
+@After、@Before、@AfterReturning、@AfterThrowing、@Around
+
+@Pointcut标注指明切点，作为@After等的参数，不用此标注的话，则用权限定名作为参数。
+
+使用切面需要在配置类上配置自动注解
+@EnableAspectJAutoProxy（和@ComponentScan和@Configuration）
+或者用XML<aop:aspectj-autoproxy>
+
+
+  
