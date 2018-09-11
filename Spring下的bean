@@ -1,5 +1,11 @@
 bean：可以复用的类。
+bean规范：
+必须是个公有(public)类
+有无参构造函数
+用公共方法暴露内部成员属性(getter,setter)
 
+
+实现这样规范的类，被称为Java Bean。即是一种可重用的组件。
 容器：一切Spring bean都存储在Spring容器内，并由其通过IoC技术管理。Spring容器也就是一个bean工厂（BeanFactory）。应用中bean的实例化，获取，销毁等都是
 由这个bean工厂管理的。
 
