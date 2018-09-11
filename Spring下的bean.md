@@ -165,7 +165,7 @@ Bean 的生命周期的配置:
  </tr>
  <tr>
  <th>bean定义</th>
-  <td><bean id="..." class="..."/></td>
+  <td>&lt;bean id="..." class="..."/&gt;</td>
   <td>@Component衍生类 @Repository @Service @Controller</td>
  </tr>
   <tr>
@@ -175,7 +175,7 @@ Bean 的生命周期的配置:
  </tr>
    <tr>
    <th>bean注入</th>
-  <td><property></td>
+  <td>&lt;property&gt;</td>
   <td>@Autowired按类型注入</td>
  </tr>
  <tr>
