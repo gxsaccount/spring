@@ -3,3 +3,94 @@
 3 Controller完成逻辑处理，返回要处理的信息（Model）和View名字给DispatherServlet
 4 DispatherServlet将视图名解析为View（视图解析器 view resolver）
 5 DispatherServlet用model渲染view输出返回给客户端
+
+
+. 简析spring mvc 工作原理
+（1 ）启动服务器，根据web.xml 的配置加载前端控制器（也称总控制器） DispatcherServlet 。在加载
+时、会完成一系列的初始化动作。
+（2 ）根据servlet 的映射请求（上面的helloWorld 实例中针对.do 请求），并参照“控制器配置文
+件”（即spmvc-servlet.xml 这样的配置）文件，把具体的请求分发给特定的后端控制器（Controller）进行处理（比
+如上例会分发给HelloWorld 控制器进行处理）
+（3 ）后端控制器调用相应的逻辑层代码，完成处理并返回视图对象（ ModelAndView ）给前端处理器。
+（4 ）前端控制器根据后端控制器返回的 ModelAndView 对象，并结合一些配置（后面有说明），返回一
+个相应的页面给客户端。
+
+
+1.简析映射处理器
+在spring mvc中,使用映射处理器可以把web请求映射到正确的处理器上，spring内置了很多映射处理器，而且
+我们也可以自定义映射处理器。下面的实例展示spring中最常用的两个映射处理器：
+BeanNameUrlHandlerMapping和SimpleUrlHandlerMapping。在正式开始前有必要了解以下相关要点：
+（1）映射处理器都能把请求传递到处理器执行链接（HandlerExecutionChain）上,并且处理器执行链接必须
+包含能处理该请求的处理器（实质就是处理器链上动态添加了了此处理器，可以结合filter工作原理理解），而
+且处理器链接也能包含一系列拦截器。
+（2）上面列举的spring最常用的两种处理器都是继承自AbstractHandlerMapping类，因而它们具备父类的属
+性。
+
+当后端控制器接受到前端控制派发的请求时，后端控制器会首先准备Model，这里即Map对象，然后返
+回exl视图。在返回视图前，会查找spmvc-servlet.xml配置文件，当查找名为exl的视图是
+由ResourceBundleViewResolver视图解析器进行解析时，这时根据此视图解析的解析规则，会对每个待解析的视
+图，ResourceBundle里（这时即view.properties文件）的[视图名].class所对应的值就是实现该视图的类。 同
+样，[视图名].url所对应的值是该视图所对应的URL。当视图类成功完成视图的预处理工作后，会把此视图返回给客户
+端。
+
+@Controller
+@RequestMapping("/myRoot")
+public class AnnotationControl {
+@RequestMapping(value = "/the/{name}.do")
+public String getName(@PathVariable
+String name, Model model) {
+model.addAttribute("message", "名字：" + name);
+return "anno";
+}
+@RequestMapping("/age.do")
+public ModelAndView getAge(@RequestParam
+int age) {
+ModelAndView mav = new ModelAndView("anno");
+mav.addObject("message", "年龄：" + age);
+return mav;
+}
+}
+
+
+package com.asm;
+public class User {
+private String username;
+private String password;
+//省略getter/setter方法。
+}
+
+
+package com.asm;
+//省略导入的相关类
+@Controller
+public class FormAnnotationControl {
+@ModelAttribute("user")
+public User initUser() {
+User user = new User();
+user.setUsername("在此处填写用户名");
+return user;
+}
+@RequestMapping("reg.do")
+public String addUI() {
+return "reg";
+}
+@RequestMapping("save.do")
+public String add(@ModelAttribute
+User user, Model model) {
+model.addAttribute(user);
+return "userInfo";
+}
+@RequestMapping("login.do")
+public ModelAndView login(@ModelAttribute
+User user) {
+ModelAndView mav = new ModelAndView(new RedirectView("manage.do"));
+if (!"admin".equals(user.getUsername())) {
+mav = new ModelAndView("error");
+}
+return mav;
+}
+@RequestMapping("manage.do")
+public String manage() {
+return "list";
+}
+}
