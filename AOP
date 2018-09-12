@@ -34,4 +34,109 @@ spring对AOP的支持(动态代理)
 或者用XML<aop:aspectj-autoproxy>
 
 
-  
+底层实现:
+代理机制:
+* Spring 的 AOP 的底层用到两种代理机制：
+ * JDK 的动态代理 :针对实现了接口的类产生代理.
+ * Cglib 的动态代理 :针对没有实现接口的类产生代理. 应用的是底层的字节码增强的技术 生成当前类
+的子类对象.  
+
+
+1.2.5.1 JDK 动态代理增强一个类中方法:
+public class MyJDKProxy implements InvocationHandler {
+传智播客——专注于 Java、.Net 和 Php、网页平面设计工程师的培训
+private UserDao userDao;
+public MyJDKProxy(UserDao userDao) {
+this.userDao = userDao;
+}
+// 编写工具方法：生成代理：
+public UserDao createProxy(){
+UserDao userDaoProxy = (UserDao)
+Proxy.newProxyInstance(userDao.getClass().getClassLoader(),
+userDao.getClass().getInterfaces(), this);
+return userDaoProxy;
+}
+@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+{
+if("save".equals(method.getName())){
+System.out.println("权限校验================");
+}
+return method.invoke(userDao, args);
+}
+}
+1.2.5.2 Cglib 动态代理增强一个类中的方法:
+public class MyCglibProxy implements MethodInterceptor{
+private CustomerDao customerDao;
+public MyCglibProxy(CustomerDao customerDao){
+this.customerDao = customerDao;
+}
+// 生成代理的方法:
+public CustomerDao createProxy(){
+// 创建 Cglib 的核心类:
+Enhancer enhancer = new Enhancer();
+// 设置父类:
+enhancer.setSuperclass(CustomerDao.class);
+// 设置回调:
+enhancer.setCallback(this);
+// 生成代理：
+传智播客——专注于 Java、.Net 和 Php、网页平面设计工程师的培训
+CustomerDao customerDaoProxy = (CustomerDao) enhancer.create();
+return customerDaoProxy;
+}
+@Override
+public Object intercept(Object proxy, Method method, Object[] args, MethodProxy
+methodProxy) throws Throwable {
+if("delete".equals(method.getName())){
+Object obj = methodProxy.invokeSuper(proxy, args);
+System.out.println("日志记录================");
+return obj;
+}
+return methodProxy.invokeSuper(proxy, args);
+}
+}
+
+
+
+
+目标类：
+public class ProductDao {
+public void save(){
+System.out.println("保存商品...");
+}
+public void update(){
+System.out.println("修改商品...");
+}
+public void delete(){
+System.out.println("删除商品...");
+}
+public void find(){
+System.out.println("查询商品...");
+}
+}
+配置目标类：
+<!-- 目标类============ -->
+ <bean id="productDao" class="cn.itcast.spring.demo4.ProductDao"></bean> 
+ 
+ 开启aop
+ <aop:aspectj-autoproxy/>
+ @Aspect:定义切面类的注解
+ 
+通知类型:
+ * @Before :前置通知
+ * @AfterReturing :后置通知
+ * @Around :环绕通知
+ * @After :最终通知
+ * @AfterThrowing :异常抛出通知.
+@Pointcut:定义切入点的注解
+切面类
+@Aspect
+public class MyAspectAnno {
+@Before("MyAspectAnno.pointcut1()")
+public void before(){
+System.out.println("前置通知===========");
+}
+@Pointcut("execution(* cn.itcast.spring.demo4.ProductDao.save(..))")
+private void pointcut1(){}
+}
+<bean id="myAspectAnno" class="cn.itcast.spring.demo4.MyAspectAnno"></bean> 
