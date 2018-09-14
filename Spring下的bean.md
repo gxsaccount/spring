@@ -1,27 +1,37 @@
-bean：可以复用的类。
-bean规范：
-必须是个公有(public)类
-有无参构造函数
-用公共方法暴露内部成员属性(getter,setter)
+**bean**：可以复用的类。  
+**bean规范**：  
+**公有(public)类**   
+**有无参构造函数**   
+用公共方法暴露内部成员属性，如**getter,setter**    
 
+**容器**：Spring bean都存储在Spring容器内，并由其通过IoC技术管理。Spring容器也就是一个bean工厂（BeanFactory）。应用中bean的实例化，获取，销毁等都是由这个bean工厂管理的。  
 
-实现这样规范的类，被称为Java Bean。即是一种可重用的组件。
-容器：一切Spring bean都存储在Spring容器内，并由其通过IoC技术管理。Spring容器也就是一个bean工厂（BeanFactory）。应用中bean的实例化，获取，销毁等都是
-由这个bean工厂管理的。
+**Spring的应用上下文**：Spring容器抽象的一种实现  
 
-Spring的应用上下文：Spring容器抽象的一种实现
-
-Spring容器下的bean生命周期：
-实例化-> 填充属性 -> 调用BeanNameAware的setBeanName() -> 调用BeanFactoryAware的setBeanFactory()方法 ->
-调用ApplicationContextAware的setApplicationContext()方法 -> 调用BeanPostProcessor的预初始化方法 -> 
-调用InitlizingBean的afterPropertiesSet()方法 -> 调用自定义的初始化方法 -> 调用BeanPostProcessor初始化方法
- -> 使用 -> 容器关闭 -> 调用DisposableBean的destroy()方法 -> 调用自定义的销毁方法
+Spring容器下的**bean生命周期**： 
+从调用getBean(name)开始：  
+调用InstantiationAwareBeanPostProcessor的postProcessBeforeInstantiation()方法 ->  
+实例化->  
+调用InstantiationAwareBeanPostProcessor的postProcessAfterInstantiation()方法 ->  
+调用InstantiationAwareBeanPostProcessor的postProcessPropertyValues()方法 ->  
+设置属性值->  
+调用BeanNameAware的setBeanName() ->   
+调用BeanFactoryAware的setBeanFactory()方法 ->  
+调用ApplicationContextAware的setApplicationContext()方法 ->   
+调用BeanPostProcessor的postProcessBeforeInitlization()预初始化方法 ->   
+调用InitlizingBean的afterPropertiesSet()方法 ->   
+调用自定义的初始化方法(init-method) ->   
+调用BeanPostProcessor初始化方法postProcessAfterInitialzation()->   
+使用 ->   
+容器关闭 ->   
+调用DisposableBean的destroy()方法 ->   
+调用自定义的销毁方法  
  
-常用bean的装配：
-XML显示装配
-Java中显示装配（JavaConfig）（次建议）
-隐式的bean发现机制和自动装配（建议）
-
+**bean的装配方法**：  
+1.XML显式装配  
+2.Java中显示装配（JavaConfig）（次建议）  
+3.隐式的bean发现机制和自动装配（建议）  
+注意，bean的id不能重复，但name可以重复，**重复时会覆盖**。
 自动化装配实现：
 组件扫描：spring自动发现应用上下文中创建的bean（@Component）
 自动装配：Spring自动满足bean之间依赖（@Autowired）
@@ -48,12 +58,10 @@ scope 属性：Bean 的作用范围.
 * session :WEB 项目中,Spring 创建一个 Bean 的对象,将对象存入到 session 域中.
 * globalSession :WEB 项目中,应用在 Porlet 环境.如果没有 Porlet 环境那么 globalSession 相当于 session.
 
-  Spring 生成 Bean 的时候三种方式(了解)
+**Spring三种注入方式**
 【无参数的构造方法的方式:】
 <!-- 方式一：无参数的构造方法的实例化 -->
 <bean id="bean1" class="cn.itcast.spring.demo3.Bean1"></bean>
-
-
 【静态工厂实例化的方式】
 提供一个工厂类：
 public class Bean2Factory {
