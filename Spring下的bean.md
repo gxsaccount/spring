@@ -1,10 +1,20 @@
-**BeanFactory**:提供配置结构和基本功能，加载并初始化bean
-**ApplicationContext**：保存bean对象的容器，BeanFactory的实现？，加载方式有
-    本地文件(FileSystemXmlApplicationContext("path"))
-    classpath(ClassPathXmlApplicationContext("path"))
-    Web应用中依赖servlet或Listener
-
-## Bean的属性：##
+**BeanFactory**:提供配置结构和基本功能，加载并初始化bean  
+**ApplicationContext**：保存bean对象的容器，BeanFactory的实现？，加载方式有  
+    本地文件(FileSystemXmlApplicationContext("path"))  
+    classpath(ClassPathXmlApplicationContext("path"))  
+    Web应用中依赖servlet或Listener  
+**Aware** 
+Spring实现了一些以Aware结尾的接口，Aware接口也是为了能够感知到自身的一些属性。   
+通过Aware接口，可以对spring相应资源进行操作。
+ApplicationContextAware：接口方法setApplicationContext，能够获取到ApplicationContext。否则不能获取ApplicationContext。
+BeanNameAware：接口方法setBeanName，BeanNameAware接口是为了让自身Bean能够感知到，获取到自身在Spring容器中的id属性。
+BeanFactoryAware接口的类，能够获取到BeanFactory对象
+...
+**Atuowiring**  
+No：不做任何操作  
+byname：装配属性姓名(id/name)的bean,多个匹配异常  
+byType:装配指定属性类型相同的bean，多个匹配异常  
+## Bean的属性 ##  
    **配置项**：  
       Id，  
       name，  
