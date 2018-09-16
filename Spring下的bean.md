@@ -1,8 +1,37 @@
-BeanFactory:提供配置结构和基本功能，加载并初始化bean
-ApplicationContext：保存bean对象，
-本地文件(FileSystemXmlApplicationContext("path"))
-classpath(ClassPathXmlApplicationContext("path"))
-Web应用中依赖servlet或Listener
+**BeanFactory**:提供配置结构和基本功能，加载并初始化bean
+**ApplicationContext**：保存bean对象的容器，BeanFactory的实现？，加载方式有
+    本地文件(FileSystemXmlApplicationContext("path"))
+    classpath(ClassPathXmlApplicationContext("path"))
+    Web应用中依赖servlet或Listener
+
+## Bean的属性：##
+   **配置项**：  
+      Id，  
+      name，  
+      Class，  
+      scope，  
+      Constructor arguments，  
+      Properties，  
+      Autowiring mode，  
+      lazy-initialization mode，  
+      Initalization/destruction method   
+   **scope 作用域**：Bean 的作用范围.  
+      
+      singleton :**默认值**，单例的.在同一个容器中
+      prototype :多例的，每次请求创建新实例
+      request :每次http请求创建一个实例且仅在当前request内有效.
+      session :每次http请求创建一个实例且仅在当前session内有效.
+      globalSession :WEB 项目中,应用在 Porlet 环境.如果没有 Porlet 环境那么 globalSession 相当于 session.
+## bean的生命周期 ##
+定义，初始化，使用，销毁
+初始化：  
+1.实现org.springframework.beans.factory.InitializingBean接口，覆盖afterPropertiesSet方法  
+2.配置init-method  
+销毁：
+1.实现org.springframework.beans.factory.DisposbleBean接口，覆盖destroy方法  
+2.配置destroy-method  
+注意：
+可以配置全局的默认初始化、销毁方法<beans ... default-init-method="initName" defalut-destroy-method="destroyName"></beans>
 **bean**：可以复用的类。  
 **bean规范**：  
 **公有(public)类**   
@@ -55,13 +84,7 @@ Spring容器下的**bean生命周期**：
 @ContextConfiguration(上下文类.class)
 @Autowired使用在构造器，setter等各种方法上，自动注入。（将对应的bean注入）
 
-Bean的属性：
-scope 属性：Bean 的作用范围.
-* singleton :默认值，单例的.
-* prototype :多例的
-* request :WEB 项目中,Spring 创建一个 Bean 的对象,将对象存入到 request 域中.
-* session :WEB 项目中,Spring 创建一个 Bean 的对象,将对象存入到 session 域中.
-* globalSession :WEB 项目中,应用在 Porlet 环境.如果没有 Porlet 环境那么 globalSession 相当于 session.
+
 
 **Spring三种注入方式**
 【无参数的构造方法的方式:】
