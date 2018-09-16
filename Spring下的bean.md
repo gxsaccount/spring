@@ -1,3 +1,8 @@
+BeanFactory:提供配置结构和基本功能，加载并初始化bean
+ApplicationContext：保存bean对象，
+本地文件(FileSystemXmlApplicationContext("path"))
+classpath(ClassPathXmlApplicationContext("path"))
+Web应用中依赖servlet或Listener
 **bean**：可以复用的类。  
 **bean规范**：  
 **公有(public)类**   
