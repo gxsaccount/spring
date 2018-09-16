@@ -9,11 +9,13 @@ Spring实现了一些以Aware结尾的接口，Aware接口也是为了能够感�
 ApplicationContextAware：接口方法setApplicationContext，能够获取到ApplicationContext。否则不能获取ApplicationContext。
 BeanNameAware：接口方法setBeanName，BeanNameAware接口是为了让自身Bean能够感知到，获取到自身在Spring容器中的id属性。
 BeanFactoryAware接口的类，能够获取到BeanFactory对象
-...
+...  
 **Atuowiring**  
+用<beans defalut-autowire="constructor/byname/byType"></beans>，或者@autoWeird注解
 No：不做任何操作  
 byname：装配属性姓名(id/name)的bean,多个匹配异常  
-byType:装配指定属性类型相同的bean，多个匹配异常  
+byType:装配指定属性class相同的bean，多个匹配异常  
+construct：也是根据class来装配  
 ## Bean的属性 ##  
    **配置项**：  
       Id，  
