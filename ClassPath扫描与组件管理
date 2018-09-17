@@ -1,0 +1,29 @@
+@Component是一个通用注解，适用于任何bean  
+  基于@Component的注解
+  @Resoitory：通常用于注解DAO类，即持久层  
+  @Service：通常用于注解Service类，即服务层  
+  @Controller：通常用于Controller类，控制层（MVC）  
+Spring可以自动检测类并注册Bean到ApplicationContext中，
+<beans>
+  <context:component-scan base-package="org.example">
+    <context:include-filter type ="regex" expression=".*Stub.*Repository"/>//包含过滤器
+    <context:exclude-filter type ="annotation" expression="org.springframework.stereotype.Repository"/>//排除过滤器
+  </context:component-scan>
+  //包含了<context:annotation-config>，前者类，成员，方法注解都可以扫描，后者不包含类
+</beans>
+
+定义一个bean：
+扫描过程中组就按被自动检测，bean的名称是由BeanNameGenerator生成的(@Component,@Repository,@Service,@Controller的name属性)
+默认为MovieFinderImpl==》movieFinderImpl
+
+代理方法：
+可以使用scoped-proxy属性指定代理，有三个值可以选：no，intefaces(基于接口代理JDK)，targetClass（基于目标类代理CGLib）
+<beans>
+    <context:component-scan base-package="org.examlpe"
+        scoped-proxy="interfaces"/>  
+</beans>
+
+@Required注解适用于bean属性的seter方法，表示的bean属性必须在配置时被填充。
+@Autowired注解为传统的setter方法，可用于setter方法，构造器或者成员变量
+    @Autowired(required=false) 找不到不跑出异常
+     每个类只有一个构造器被标记为required=true
