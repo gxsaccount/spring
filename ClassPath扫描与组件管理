@@ -24,6 +24,12 @@ Spring可以自动检测类并注册Bean到ApplicationContext中，
 </beans>
 
 @Required注解适用于bean属性的seter方法，表示的bean属性必须在配置时被填充。
-@Autowired注解为传统的setter方法，可用于setter方法，构造器或者成员变量
-    @Autowired(required=false) 找不到不跑出异常
-     每个类只有一个构造器被标记为required=true
+@Autowired注解为传统的setter方法，可用于**setter方法**，**构造器**或者**成员变量**
+    @Autowired(required=false) 找不到不跑出异常，每个类只有一个构造器被标记为required=true
+@Autowired可以注解那些解析依赖性接口，如BeanFactory，ApplicationContext等
+@Autowired注解set<bean>，key为String的map<beanid,bean对象>
+      BeanImpOne 和 BeanImpTwo 为BeanInterface实现类，用@Component注解
+      List<BeanInteface> list;用Autoweird注解会被注入BeanImpOne和BeanImpTwo
+      List可以用@Order(1或2)
+@Autowired由BeanPostProcessor处理。自定义的BeanPostProcessor不用Autowired，需要使用xml或@Bean注入
+
